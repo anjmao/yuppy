@@ -1,0 +1,17 @@
+{
+    "projects": [
+        {
+            "name": "Project 1",
+            "commands": {
+                "start": "yarn",
+                "test": "test"
+            }
+        },
+        {
+            "name": "Project 2",
+            "commands": {
+                "start": ""
+            }
+        }
+    ]
+}

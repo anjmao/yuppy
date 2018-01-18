@@ -1,0 +1,23 @@
+{
+  "name": "yuppy",
+  "version": "0.0.1",
+  "description": "",
+  "main": "i",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anjmao/yuppy.git"
+  },
+  "author": "anjmao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/anjmao/yuppy/issues"
+  },
+  "homepage": "https://github.com/anjmao/yuppy#readme",
+  "dependencies": {
+    "commander": "^2.13.0",
+    "inquirer": "^5.0.0"
+  }
+}
