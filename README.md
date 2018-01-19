@@ -1,5 +1,5 @@
 # Yuppy
-Monolythic projects management made simple.
+Projects management made simple.
 
 ## What is Yuppy
 Yuppy allows you do describe your projects and their commands for easy to use development workflows.
