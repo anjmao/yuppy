@@ -1,17 +1,31 @@
 {
     "projects": [
         {
-            "name": "Project 1",
+            "name": "Angular app",
             "commands": {
-                "start": "tsc -w",
+                "start": "webpack --watch --config ./webpack/angular.webpack.js",
+                "test": "karma start"
+            }
+        },
+        {
+            "name": "Vue app",
+            "commands": {
+                "start": "webpack --watch --config ./webpack/vue.webpack.js",
+                "test": "mocha"
+            }
+        },
+        {
+            "name": "React app",
+            "commands": {
+                "start": "webpack --watch --config ./webpack/react.webpack.js",
                 "test": "jest"
             }
         },
         {
-            "name": "Project 2",
+            "name": "Dotnet Core API",
             "commands": {
-                "build": "webpack",
-                "test": "mocha"
+                "start": "dotnet run --project ./backend/api.csproj",
+                "test": "dotnet test ./backend/api.tests.csproj"
             }
         }
     ]
