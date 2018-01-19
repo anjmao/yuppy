@@ -69,7 +69,7 @@ yuppy start
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/anjmao/yuppy/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/anjmao/yuppy/blob/master/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## License
 
