@@ -4,14 +4,14 @@ Projects management made simple.
 ## What is Yuppy
 Yuppy allows you do describe your projects and their commands for easy to use development workflows.
 
-## Example
+## Getting started
 
 * Install yuppy
 ```
 npm install yuppy -g
 ```
 
-* Create yuppy.config.json file under your projects root
+* Create `yuppy.config.json` file under your projects root
 
 ```json
 {
@@ -61,3 +61,16 @@ yuppy start
 * Run command
 
 ![](https://github.com/anjmao/yuppy/blob/master/run_command.png)
+
+## Built With
+
+* [Commander.js](https://github.com/tj/commander.js/) - node.js command-line interfaces made easy
+* [Inquirer.js](https://github.com/SBoudrias/Inquirer.js/) - A collection of common interactive command line user interfaces.
+
+## Contributing
+
+Please read [CONTRIBUTING.md](https://github.com/anjmao/yuppy/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
