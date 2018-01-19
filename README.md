@@ -56,4 +56,7 @@ yuppy start
 
 * Select project
 
+![](https://github.com/anjmao/yuppy/blob/master/select_project.png)
 
+* Run command
+![](https://github.com/anjmao/yuppy/blob/master/run_command.png)
