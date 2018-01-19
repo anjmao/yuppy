@@ -2,7 +2,7 @@
   "name": "yuppy",
   "version": "0.0.1",
   "description": "",
-  "main": "i",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,5 +19,8 @@
   "dependencies": {
     "commander": "^2.13.0",
     "inquirer": "^5.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^2.6.2"
   }
 }
