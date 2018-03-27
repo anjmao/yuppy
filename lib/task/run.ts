@@ -1,17 +1,17 @@
-import { YuppyConfig } from '../model/config';
-
-const { runCommand } = require('../cmd-util/cmd-util');
+import { Project } from '../model/config';
+import { runCommand } from '../cmd-util/cmd-util';
 
 export interface RunTaskOptions {
     command: string;
-    parallel: boolean;
-    stopOnFail: boolean;
-    skipUnchanged: boolean;
+    parallel?: boolean;
+    maxParallelTasks?: number;
+    stopOnFail?: boolean;
+    skipUnchanged?: boolean;
 }
 
-export default async function (opt: RunTaskOptions, config: YuppyConfig) {
+export default async function (opt: RunTaskOptions, projects: Project[]) {
     const tasksFn = [];
-    for (const project of config.projects) {
+    for (const project of projects) {
         const key = Object.keys(project.commands).find(x => x.indexOf(opt.command) > -1);
         const cmd = project.commands[key];
         tasksFn.push(() => runCommand(opt.command, cmd));
@@ -26,7 +26,7 @@ export default async function (opt: RunTaskOptions, config: YuppyConfig) {
                 await tFn();
             } catch (err) {
                 if (opt.stopOnFail) {
-                    return Promise.reject(`failed to run coerr`);
+                    return Promise.reject(`error running command: ${err}`);
                 }
             }
         }

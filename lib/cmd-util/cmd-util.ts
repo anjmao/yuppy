@@ -1,6 +1,7 @@
 import { spawn } from 'child_process';
 
 export function runCommand(command: string, cmd: string) {
+    console.log('rea')
     if (!cmd) {
         return Promise.resolve(`skipping: command "${command}" is not defined`);
     }

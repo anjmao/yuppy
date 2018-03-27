@@ -9,7 +9,7 @@
   "scripts": {
     "build": "./build.sh",
     "test": "jest",
-    "test:watch": "jest --watach"
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
