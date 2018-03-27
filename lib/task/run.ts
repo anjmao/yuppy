@@ -1,6 +1,15 @@
+import { YuppyConfig } from '../model/config';
+
 const { runCommand } = require('../cmd-util/cmd-util');
 
-export default async function (opt: any, config: any) {
+export interface RunTaskOptions {
+    command: string;
+    parallel: boolean;
+    stopOnFail: boolean;
+    skipUnchanged: boolean;
+}
+
+export default async function (opt: RunTaskOptions, config: YuppyConfig) {
     const tasksFn = [];
     for (const project of config.projects) {
         const key = Object.keys(project.commands).find(x => x.indexOf(opt.command) > -1);

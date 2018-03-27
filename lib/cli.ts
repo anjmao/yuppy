@@ -3,10 +3,10 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as program from 'commander';
 import startTask from './task/start';
-import runTask from './task/run';
+import runTask, { RunTaskOptions } from './task/run';
 import { YuppyConfig } from './model/config';
 
-const DEFAULT_CONFIG_NAME = 'yuppy.config.json';
+const DEFAULT_CONFIG_NAME = 'yuppy.config.js';
 
 exports.run = function () {
     program.version('0.0.1');
@@ -31,7 +31,13 @@ exports.run = function () {
         .option("-p, --parallel", "Run in parallel")
         .action((command, args) => {
             const config = getYuppyConfig(args.config);
-            runTask({ command: command, parallel: args.parallel, stopOnFail: args.stopOnFail }, config).then((code) => {
+            const runOptions: RunTaskOptions = {
+                command: command,
+                parallel: args.parallel,
+                stopOnFail: args.stopOnFail,
+                skipUnchanged: false
+            };
+            runTask(runOptions, config).then((code) => {
                 process.stdin.pause();
                 process.exit(code);
             }).catch((err) => {
@@ -48,9 +54,12 @@ exports.run = function () {
 
 function getYuppyConfig(configPath: string): YuppyConfig {
     configPath = configPath || DEFAULT_CONFIG_NAME;
+    const isJs = configPath.split('.').pop() === 'js';
     try {
-        const projects = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), configPath), 'utf8'));
-        return projects;
+        if (isJs) {
+            return require(path.resolve(process.cwd(), configPath));
+        }
+        return JSON.parse(fs.readFileSync(path.resolve(process.cwd(), configPath), 'utf8'));;
     } catch (err) {
         throw new Error(`yuppy config not found in path "${configPath}": ` + err);
     }

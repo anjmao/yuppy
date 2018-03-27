@@ -1,0 +1,10 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "./node_modules/yuppy/bin/yuppy start"
+  },
+  "author": "",
+  "license": "ISC"
+}
