@@ -5,7 +5,7 @@
             "commands": {
                 "start": "webpack --watch --config ./webpack/angular.webpack.js",
                 "test": "karma start",
-                "echo": "fecho Hello Angular"
+                "echo": "echo Hello Angular"
             }
         },
         {
