@@ -4,28 +4,32 @@
             "name": "Angular app",
             "commands": {
                 "start": "webpack --watch --config ./webpack/angular.webpack.js",
-                "test": "karma start"
+                "test": "karma start",
+                "echo": "fecho Hello Angular"
             }
         },
         {
             "name": "Vue app",
             "commands": {
                 "start": "webpack --watch --config ./webpack/vue.webpack.js",
-                "test": "mocha"
+                "test": "mocha",
+                "echo": "echo Hello Vue"
             }
         },
         {
             "name": "React app",
             "commands": {
                 "start": "webpack --watch --config ./webpack/react.webpack.js",
-                "test": "jest"
+                "test": "jest",
+                "echo": "echo Hello React"
             }
         },
         {
             "name": "Dotnet Core API",
             "commands": {
                 "start": "dotnet run --project ./backend/api.csproj",
-                "test": "dotnet test ./backend/api.tests.csproj"
+                "test": "dotnet test ./backend/api.tests.csproj",
+                "echo": "echo Hello Dotnet"
             }
         }
     ]
