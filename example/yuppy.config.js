@@ -1,27 +1,32 @@
+const node = 'node';
+const webpack = `${node} ./node_modules/webpack-cli/bin/webpack.js`
 module.exports = {
     'projects': [
         {
             'name': 'Angular app',
             'commands': {
-                'start': 'webpack --watch --config ./webpack/angular.webpack.js',
-                'test': 'karma start',
-                'echo': 'echo Hello Angular'
+                'start': `${webpack} --watch --config ./webpack/angular.webpack.js`,
+                'build': `${webpack} --config ./config/angular.webpack.js`,
+                'echo': 'echo Hello Angular',
+                'err': 'Angular error please'
             }
         },
         {
             'name': 'Vue app',
             'commands': {
-                'start': 'webpack --watch --config ./webpack/vue.webpack.js',
-                'test': 'mocha',
-                'echo': 'echo Hello Vue'
+                'start': `${webpack} --watch --config ./webpack/vue.webpack.js`,
+                'build': `${webpack} --config ./config/vue.webpack.js`,
+                'echo': 'echo Hello Vue',
+                'err': 'Vue error please'
             }
         },
         {
             'name': 'React app',
             'commands': {
-                'start': 'webpack --watch --config ./webpack/react.webpack.js',
-                'test': 'jest',
-                'echo': 'echo Hello React'
+                'start': `${webpack} --watch --config ./webpack/react.webpack.js`,
+                'build': `${webpack} --config ./config/react.webpack.js`,
+                'echo': 'echo Hello React',
+                'err': 'React error please'
             }
         }
     ]
