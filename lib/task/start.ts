@@ -1,4 +1,3 @@
-// @ts-check
 import * as inquirer from 'inquirer';
 import { runCommand } from '../cmd-util/cmd-util';
 import { Config } from '../model/config';
@@ -23,7 +22,7 @@ export default function(config: Config): Promise<any> {
                 choices: commands
             }).then((command: any) => {
                 const cmd = project.tasks[command.command];
-                return runCommand(command.command, cmd);
+                return runCommand(cmd);
             });
         });
 }

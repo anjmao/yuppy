@@ -11,7 +11,7 @@ describe('run task tests', () => {
         (<any>runCommand).mockImplementation(() => {});
     });
 
-    it('should run projects command in order', () => {
+    it('should run projects tasks in order', () => {
         expect.assertions(3);
 
         const options: RunTaskOptions = {
@@ -24,12 +24,44 @@ describe('run task tests', () => {
 
         return runTask(options, projects).then((res) => {
             expect(res).toBe(0);
-            expect(runCommand).toHaveBeenCalledWith('build', 'echo p1');
-            expect(runCommand).toHaveBeenCalledWith('build', 'echo p2');
+            expect(runCommand).toHaveBeenCalledWith('echo p1');
+            expect(runCommand).toHaveBeenCalledWith('echo p2');
         });
     });
 
-    it('should run projects command in parallel', () => {
+    it('should skip projects if task cmd was not found', () => {
+        expect.assertions(3);
+
+        const options: RunTaskOptions = {
+            task: 'build'
+        };
+        const projects = [
+            createProject('p1', { test: 'echo p1' }),
+            createProject('p2', { build: 'echo p2' })
+        ];
+
+        return runTask(options, projects).then((res) => {
+            expect(res).toBe(0);
+            expect(runCommand).toHaveBeenCalledWith('echo p2');
+            expect(runCommand).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    it('should succeed when no projects', () => {
+        expect.assertions(2);
+
+        const options: RunTaskOptions = {
+            task: 'build'
+        };
+        const projects = [];
+
+        return runTask(options, projects).then((res) => {
+            expect(res).toBe(0);
+            expect(runCommand).toHaveBeenCalledTimes(0);
+        });
+    });
+
+    it('should run projects tasks in parallel', () => {
         expect.assertions(3);
 
         const options: RunTaskOptions = {
@@ -43,16 +75,36 @@ describe('run task tests', () => {
 
         return runTask(options, projects).then((res) => {
             expect(res).toBe(0);
-            expect(runCommand).toHaveBeenCalledWith('build', 'echo p1');
-            expect(runCommand).toHaveBeenCalledWith('build', 'echo p2');
+            expect(runCommand).toHaveBeenCalledWith('echo p1');
+            expect(runCommand).toHaveBeenCalledWith('echo p2');
         });
     });
 
-    it('should stop on first failed command', () => {
+    it('should run projects tasks in parallel with max parallel tasks', () => {
+        expect.assertions(2);
+
+        const options: RunTaskOptions = {
+            task: 'build',
+            parallel: true,
+            maxParallelTasks: 2
+        };
+        const projects = [
+            createProject('p1', { build: 'echo p1' }),
+            createProject('p2', { build: 'echo p2' }),
+            createProject('p3', { build: 'echo p3' }),
+        ];
+
+        return runTask(options, projects).then((res) => {
+            expect(res).toBe(0);
+            expect(runCommand).toHaveBeenCalledTimes(3);
+        });
+    });
+
+    it('should stop on first failed tasks', () => {
         expect.assertions(2);
 
         (<any>runCommand).mockImplementation(() => {
-            return Promise.reject('ups');
+            throw new Error('ups');
         });
 
         const options: RunTaskOptions = {
@@ -66,7 +118,7 @@ describe('run task tests', () => {
 
         return runTask(options, projects).catch((err) => {
             expect(runCommand).toHaveBeenCalledTimes(1);
-            expect(err).toBe('ups');
+            expect(err).toEqual(new Error('ups'));
         });
     });
 });

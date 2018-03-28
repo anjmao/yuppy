@@ -1,11 +1,9 @@
-
 import * as path from 'path';
 import * as fs from 'fs';
 import * as program from 'commander';
 import startTask from './task/start';
 import runTask, { RunTaskOptions } from './task/run';
 import { Config } from './model/config';
-import { Project } from './model/project';
 
 const DEFAULT_CONFIG_NAME = 'yuppy.config.js';
 
@@ -21,6 +19,8 @@ exports.run = function () {
             startTask(config).then((code) => {
                 process.stdin.pause();
                 process.exit(code);
+            }).catch((err) => {
+                console.log(err);
             });
         });
 
@@ -66,9 +66,8 @@ function getYuppyConfig(configPath: string): Config {
         } else {
             config = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), configPath), 'utf8'));
         }
-        const projects = config.projects.map((x: any) => new Project({name: x.name, path: x.path, tasks: x.commands}));
-        return new Config({projects: projects});
+        return Config.deserialize(config);
     } catch (err) {
-        throw new Error(`yuppy config not found in path "${configPath}": ` + err);
+        throw new Error(`Can not open config file in path "${configPath}": ${err}`);
     }
 }

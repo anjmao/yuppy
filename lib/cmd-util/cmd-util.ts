@@ -1,19 +1,19 @@
 import { spawn } from 'child_process';
+import { SUCCESS_CODE } from '../model/constant';
 
-export function runCommand(command: string, cmd: string) {
-    console.log('rea')
+export function runCommand(cmd: string) {
     if (!cmd) {
-        return Promise.resolve(`skipping: command "${command}" is not defined`);
+        throw new Error(`Command is required`);
     }
     return new Promise((resolve, reject) => {
         const child = spawnCommand(cmd, { stdio: 'inherit' });
         child.on('error', (error) => {
-            reject('command error: ' + error.toString())
+            reject(error);
         });
 
         child.on('exit', (code) => {
             child.kill();
-            code === 0  ? resolve(code) : reject(code);
+            code === SUCCESS_CODE  ? resolve(code) : reject(code);
         });
     });
 }
