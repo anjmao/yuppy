@@ -5,7 +5,7 @@ module.exports = {
         {
             'name': 'Angular app',
             'tasks': {
-                'start': `${webpack} --watch --config ./webpack/angular.webpack.js`,
+                'start': `${webpack} --watch --config ./config/angular.webpack.js`,
                 'build': `${webpack} --config ./config/angular.webpack.js`,
                 'echo': 'echo Hello Angular',
                 'err': 'Angular error please'
@@ -14,7 +14,7 @@ module.exports = {
         {
             'name': 'Vue app',
             'tasks': {
-                'start': `${webpack} --watch --config ./webpack/vue.webpack.js`,
+                'start': `${webpack} --watch --config ./config/vue.webpack.js`,
                 'build': `${webpack} --config ./config/vue.webpack.js`,
                 'echo': 'echo Hello Vue',
                 'err': 'Vue error please'
@@ -23,7 +23,7 @@ module.exports = {
         {
             'name': 'React app',
             'tasks': {
-                'start': `${webpack} --watch --config ./webpack/react.webpack.js`,
+                'start': `${webpack} --watch --config ./config/react.webpack.js`,
                 'build': `${webpack} --config ./config/react.webpack.js`,
                 'echo': 'echo Hello React',
                 'err': 'React error please'

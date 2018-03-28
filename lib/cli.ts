@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as program from 'commander';
 import startTask from './task/start';
 import runTask, { RunTaskOptions } from './task/run';
-import { Config } from './model/config';
+import { Config, ConfigSchema } from './model/config';
 
 const DEFAULT_CONFIG_NAME = 'yuppy.config.js';
 
@@ -60,7 +60,7 @@ function getYuppyConfig(configPath: string): Config {
     configPath = configPath || DEFAULT_CONFIG_NAME;
     const isJs = configPath.split('.').pop() === 'js';
     try {
-        let config = null;
+        let config: ConfigSchema = null;
         if (isJs) {
             config = require(path.resolve(process.cwd(), configPath));
         } else {
