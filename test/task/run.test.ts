@@ -1,5 +1,6 @@
 import runTask, { RunTaskOptions } from '../../lib/task/run';
-import { YuppyConfig, Project } from '../../lib/model/config';
+import { Config } from '../../lib/model/config';
+import { Project } from '../../lib/model/project';
 import { runCommand } from '../../lib/cmd-util/cmd-util';
 
 jest.mock('../../lib/cmd-util/cmd-util');
@@ -14,7 +15,7 @@ describe('run task tests', () => {
         expect.assertions(3);
 
         const options: RunTaskOptions = {
-            command: 'build'
+            task: 'build'
         };
         const projects = [
             createProject('p1', { build: 'echo p1' }),
@@ -32,7 +33,7 @@ describe('run task tests', () => {
         expect.assertions(3);
 
         const options: RunTaskOptions = {
-            command: 'build',
+            task: 'build',
             parallel: true
         };
         const projects = [
@@ -48,14 +49,14 @@ describe('run task tests', () => {
     });
 
     it('should stop on first failed command', () => {
-        expect.assertions(1);
+        expect.assertions(2);
 
         (<any>runCommand).mockImplementation(() => {
             return Promise.reject('ups');
         });
 
         const options: RunTaskOptions = {
-            command: 'build',
+            task: 'build',
             stopOnFail: true
         };
         const projects = [
@@ -65,10 +66,11 @@ describe('run task tests', () => {
 
         return runTask(options, projects).catch((err) => {
             expect(runCommand).toHaveBeenCalledTimes(1);
+            expect(err).toBe('ups');
         });
     });
 });
 
-function createProject(name, commands: { [index: string]: string }) {
-    return new Project({ name: name, path: `/app/${name}`, commands });
+function createProject(name, tasks: { [index: string]: string }) {
+    return new Project({ name: name, path: `/app/${name}`, tasks: tasks });
 }

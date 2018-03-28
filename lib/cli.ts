@@ -4,7 +4,8 @@ import * as fs from 'fs';
 import * as program from 'commander';
 import startTask from './task/start';
 import runTask, { RunTaskOptions } from './task/run';
-import { YuppyConfig, Project } from './model/config';
+import { Config } from './model/config';
+import { Project } from './model/project';
 
 const DEFAULT_CONFIG_NAME = 'yuppy.config.js';
 
@@ -13,7 +14,7 @@ exports.run = function () {
 
     program
         .command('start')
-        .description('Select and run project command')
+        .description('Select and run project task')
         .option("-c, --config [config]", "Optional yuppy config file path")
         .action((args) => {
             const config = getYuppyConfig(args.config);
@@ -24,17 +25,17 @@ exports.run = function () {
         });
 
     program
-        .command('run <command>')
-        .description('Run given command for all project')
+        .command('run <task>')
+        .description('Run given task for all project')
         .option("-c, --config [config]", "Optional yuppy config file path")
-        .option("-st, --stop-on-fail", "Stop on first failed command")
-        .option("-sk, --skip-unchanged", "Skip command when project is not changed")
+        .option("-st, --stop-on-fail", "Stop on first failed task")
+        .option("-sk, --skip-unchanged", "Skip task when project is not changed")
         .option("-p, --parallel", "Run in parallel")
         .option("-pm, --max-parallel-tasks [maxParallelTasks]", "Set max parallel tasks to run at the same time")
-        .action((command, args) => {
+        .action((task, args) => {
             const config = getYuppyConfig(args.config);
             const runOptions: RunTaskOptions = {
-                command: command,
+                task: task,
                 parallel: args.parallel,
                 maxParallelTasks: args.maxParallelTasks,
                 stopOnFail: args.stopOnFail,
@@ -55,7 +56,7 @@ exports.run = function () {
     }
 }
 
-function getYuppyConfig(configPath: string): YuppyConfig {
+function getYuppyConfig(configPath: string): Config {
     configPath = configPath || DEFAULT_CONFIG_NAME;
     const isJs = configPath.split('.').pop() === 'js';
     try {
@@ -65,8 +66,8 @@ function getYuppyConfig(configPath: string): YuppyConfig {
         } else {
             config = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), configPath), 'utf8'));
         }
-        const projects = config.projects.map((x: any) => new Project({name: x.name, path: x.path, commands: x.commands}));
-        return new YuppyConfig({projects: projects});
+        const projects = config.projects.map((x: any) => new Project({name: x.name, path: x.path, tasks: x.commands}));
+        return new Config({projects: projects});
     } catch (err) {
         throw new Error(`yuppy config not found in path "${configPath}": ` + err);
     }

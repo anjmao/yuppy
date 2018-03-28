@@ -4,7 +4,7 @@ module.exports = {
     'projects': [
         {
             'name': 'Angular app',
-            'commands': {
+            'tasks': {
                 'start': `${webpack} --watch --config ./webpack/angular.webpack.js`,
                 'build': `${webpack} --config ./config/angular.webpack.js`,
                 'echo': 'echo Hello Angular',
@@ -13,7 +13,7 @@ module.exports = {
         },
         {
             'name': 'Vue app',
-            'commands': {
+            'tasks': {
                 'start': `${webpack} --watch --config ./webpack/vue.webpack.js`,
                 'build': `${webpack} --config ./config/vue.webpack.js`,
                 'echo': 'echo Hello Vue',
@@ -22,7 +22,7 @@ module.exports = {
         },
         {
             'name': 'React app',
-            'commands': {
+            'tasks': {
                 'start': `${webpack} --watch --config ./webpack/react.webpack.js`,
                 'build': `${webpack} --config ./config/react.webpack.js`,
                 'echo': 'echo Hello React',
