@@ -4,6 +4,7 @@ import * as program from 'commander';
 import startTask from './task/start';
 import runTask, { RunTaskOptions } from './task/run';
 import { Config, ConfigSchema } from './model/config';
+import { FAILURE_CODE } from './model/constant';
 
 const DEFAULT_CONFIG_NAME = 'yuppy.config.js';
 
@@ -21,21 +22,23 @@ exports.run = function () {
                 process.exit(code);
             }).catch((err) => {
                 console.log(err);
+                process.stdin.pause();
+                process.exit(FAILURE_CODE);
             });
         });
 
     program
         .command('run <task>')
-        .description('Run given task for all project')
+        .description('Run given task(s) for all project')
         .option("-c, --config [config]", "Optional yuppy config file path")
-        .option("-st, --stop-on-fail", "Stop on first failed task")
-        .option("-sk, --skip-unchanged", "Skip task when project is not changed")
+        .option("-s, --stop-on-fail", "Stop on first failed task")
+        .option("-S, --skip-unchanged", "Skip task when project is not changed")
         .option("-p, --parallel", "Run in parallel")
-        .option("-pm, --max-parallel-tasks [maxParallelTasks]", "Set max parallel tasks to run at the same time")
+        .option("-P, --max-parallel-tasks [maxParallelTasks]", "Set max parallel tasks to run at the same time")
         .action((task, args) => {
             const config = getYuppyConfig(args.config);
             const runOptions: RunTaskOptions = {
-                task: task,
+                taskNames: task.split(','),
                 parallel: args.parallel,
                 maxParallelTasks: args.maxParallelTasks,
                 stopOnFail: args.stopOnFail,
@@ -46,6 +49,8 @@ exports.run = function () {
                 process.exit(code);
             }).catch((err) => {
                 console.log(err);
+                process.stdin.pause();
+                process.exit(FAILURE_CODE);
             });
         });
 

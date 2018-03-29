@@ -5,7 +5,7 @@ import { runCommand } from '../../lib/cmd-util/cmd-util';
 
 jest.mock('../../lib/cmd-util/cmd-util');
 
-describe('run task tests', () => {
+describe('Run task', () => {
     beforeEach(() => {
         (<any>runCommand).mockClear();
         (<any>runCommand).mockImplementation(() => {});
@@ -15,16 +15,16 @@ describe('run task tests', () => {
         expect.assertions(3);
 
         const options: RunTaskOptions = {
-            task: 'build'
+            taskNames: ['build']
         };
         const projects = [
-            createProject('p1', { build: 'echo p1' }),
+            createProject('p1', { build: '$test && echo p1', test: 'jest --config ./config.js' }),
             createProject('p2', { build: 'echo p2' })
         ];
 
         return runTask(options, projects).then((res) => {
             expect(res).toBe(0);
-            expect(runCommand).toHaveBeenCalledWith('echo p1');
+            expect(runCommand).toHaveBeenCalledWith('jest --config ./config.js && echo p1');
             expect(runCommand).toHaveBeenCalledWith('echo p2');
         });
     });
@@ -33,7 +33,7 @@ describe('run task tests', () => {
         expect.assertions(3);
 
         const options: RunTaskOptions = {
-            task: 'build'
+            taskNames: ['build']
         };
         const projects = [
             createProject('p1', { test: 'echo p1' }),
@@ -47,17 +47,16 @@ describe('run task tests', () => {
         });
     });
 
-    it('should succeed when no projects', () => {
-        expect.assertions(2);
+    it('should fail when no projects', () => {
+        expect.assertions(1);
 
         const options: RunTaskOptions = {
-            task: 'build'
+            taskNames: ['build']
         };
         const projects = [];
 
-        return runTask(options, projects).then((res) => {
-            expect(res).toBe(0);
-            expect(runCommand).toHaveBeenCalledTimes(0);
+        return runTask(options, projects).catch((err) => {
+            expect(err).toEqual('Runnable commands for task "build" was not found');
         });
     });
 
@@ -65,7 +64,7 @@ describe('run task tests', () => {
         expect.assertions(3);
 
         const options: RunTaskOptions = {
-            task: 'build',
+            taskNames: ['build'],
             parallel: true
         };
         const projects = [
@@ -84,7 +83,7 @@ describe('run task tests', () => {
         expect.assertions(2);
 
         const options: RunTaskOptions = {
-            task: 'build',
+            taskNames: ['build'],
             parallel: true,
             maxParallelTasks: 2
         };
@@ -108,7 +107,7 @@ describe('run task tests', () => {
         });
 
         const options: RunTaskOptions = {
-            task: 'build',
+            taskNames: ['build'],
             stopOnFail: true
         };
         const projects = [

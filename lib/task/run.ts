@@ -3,7 +3,7 @@ import { runCommand } from '../cmd-util/cmd-util';
 import { SUCCESS_CODE } from '../model/constant';
 
 export interface RunTaskOptions {
-    task: string;
+    taskNames: string[];
     parallel?: boolean;
     maxParallelTasks?: number;
     stopOnFail?: boolean;
@@ -13,44 +13,71 @@ export interface RunTaskOptions {
 type TaskFn = () => Promise<any>;
 
 export default async function (opt: RunTaskOptions, projects: Project[]): Promise<number> {
-    const tasksFn: TaskFn[] = [];
-    for (const project of projects) {
-        const cmd = project.getCmd(opt.task);
-        if (cmd) {
-            tasksFn.push(() => runCommand(cmd));
-        }
-    };
 
-    if (opt.parallel) {
+    const runInParallel = async (tasksFn: TaskFn[]) => {
+        // TODO: test it it works
         if (opt.maxParallelTasks) {
             const buckets = createTasksBuckets(tasksFn, opt.maxParallelTasks);
+            let success = true;
             for (const bucket of buckets) {
                 try {
                     const tasks = bucket.map(t => t());
                     await Promise.all(tasks)
-                } catch (err) {
-                    console.log(err);
+                } catch {
+                    success = false;
                 }
             }
-            return Promise.resolve(SUCCESS_CODE);
+            return success ? Promise.resolve() : Promise.reject(null);
         } else {
             const tasks = tasksFn.map(t => t());
-            return Promise.all(tasks).then(() => SUCCESS_CODE);
+            return Promise.all(tasks);
         }
-    } else {
+    };
+
+    const runInOrder = async (tasksFn: TaskFn[]) => {
+        let success = true;
         for (const tFn of tasksFn) {
             try {
                 await tFn();
             } catch (err) {
+                success = false;
                 if (opt.stopOnFail) {
                     return Promise.reject(err);
                 }
             }
         }
-    }
+        return success ? Promise.resolve() : Promise.reject(null);
+    };
 
+    const runTask = async (taskName: string) => {
+        const tasksFn: TaskFn[] = [];
+        for (const project of projects) {
+            const cmd = project.getCmd(taskName);
+            if (cmd) {
+                tasksFn.push(() => runCommand(cmd));
+            }
+        }
+        if (tasksFn.length === 0) {
+            return Promise.reject(`Runnable commands for task "${taskName}" was not found`);
+        }
+
+        if (opt.parallel) {
+            return runInParallel(tasksFn);
+        } else {
+            return runInOrder(tasksFn);
+        }
+    };
+
+    for (let taskName of opt.taskNames) {
+        try {
+            await runTask(taskName);
+        } catch (err) {
+            return Promise.reject(err);
+        }
+    }
     return Promise.resolve(SUCCESS_CODE);
 };
+
 
 function createTasksBuckets(tasksFn: TaskFn[], bucketSize: number): TaskFn[][] {
     let bucket: TaskFn[] = [];
