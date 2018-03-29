@@ -1,4 +1,4 @@
-import runTask, { RunTaskOptions } from '../../lib/task/run';
+import { RunTaskOptions, runTask } from '../../lib/task/run';
 import { Config } from '../../lib/model/config';
 import { Project } from '../../lib/model/project';
 import { runCommand } from '../../lib/cmd-util/cmd-util';
@@ -7,8 +7,8 @@ jest.mock('../../lib/cmd-util/cmd-util');
 
 describe('Run task', () => {
     beforeEach(() => {
-        (<any>runCommand).mockClear();
-        (<any>runCommand).mockImplementation(() => {});
+        (<jest.Mock>runCommand).mockClear();
+        (<jest.Mock>runCommand).mockImplementation(() => {});
     });
 
     it('should run projects tasks in order', () => {
@@ -44,19 +44,6 @@ describe('Run task', () => {
             expect(res).toBe(0);
             expect(runCommand).toHaveBeenCalledWith('echo p2');
             expect(runCommand).toHaveBeenCalledTimes(1);
-        });
-    });
-
-    it('should fail when no projects', () => {
-        expect.assertions(1);
-
-        const options: RunTaskOptions = {
-            taskNames: ['build']
-        };
-        const projects = [];
-
-        return runTask(options, projects).catch((err) => {
-            expect(err).toEqual('Runnable commands for task "build" was not found');
         });
     });
 
@@ -96,6 +83,19 @@ describe('Run task', () => {
         return runTask(options, projects).then((res) => {
             expect(res).toBe(0);
             expect(runCommand).toHaveBeenCalledTimes(3);
+        });
+    });
+
+    it('should fail when no projects', () => {
+        expect.assertions(1);
+
+        const options: RunTaskOptions = {
+            taskNames: ['build']
+        };
+        const projects = [];
+
+        return runTask(options, projects).catch((err) => {
+            expect(err).toEqual('Runnable commands for task "build" was not found');
         });
     });
 

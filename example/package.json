@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "start": "./node_modules/yuppy/bin/yuppy start",
-    "build": "./node_modules/yuppy/bin/yuppy run build"
+    "build": "./node_modules/yuppy/bin/yuppy run build",
+    "task": "./node_modules/yuppy/bin/yuppy run"
   },
   "author": "",
   "license": "ISC",

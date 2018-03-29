@@ -12,10 +12,9 @@ export interface RunTaskOptions {
 
 type TaskFn = () => Promise<any>;
 
-export default async function (opt: RunTaskOptions, projects: Project[]): Promise<number> {
+export async function runTask(opt: RunTaskOptions, projects: Project[]): Promise<number> {
 
     const runInParallel = async (tasksFn: TaskFn[]) => {
-        // TODO: test it it works
         if (opt.maxParallelTasks) {
             const buckets = createTasksBuckets(tasksFn, opt.maxParallelTasks);
             let success = true;

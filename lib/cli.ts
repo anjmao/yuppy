@@ -1,8 +1,8 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as program from 'commander';
-import startTask from './task/start';
-import runTask, { RunTaskOptions } from './task/run';
+import { startTask } from './task/start';
+import { RunTaskOptions, runTask } from './task/run';
 import { Config, ConfigSchema } from './model/config';
 import { FAILURE_CODE } from './model/constant';
 
@@ -40,7 +40,7 @@ exports.run = function () {
             const runOptions: RunTaskOptions = {
                 taskNames: task.split(','),
                 parallel: args.parallel,
-                maxParallelTasks: args.maxParallelTasks,
+                maxParallelTasks: parseInt(args.maxParallelTasks) ? args.maxParallelTasks : 0,
                 stopOnFail: args.stopOnFail,
                 skipUnchanged: false
             };

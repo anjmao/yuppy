@@ -2,7 +2,7 @@ import * as inquirer from 'inquirer';
 import { runCommand } from '../cmd-util/cmd-util';
 import { Config } from '../model/config';
 
-export default function(config: Config): Promise<any> {
+export function startTask(config: Config): Promise<any> {
     const projectNames = config.projects.map(x => x.name);
 
     return inquirer
