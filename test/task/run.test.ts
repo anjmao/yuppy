@@ -1,6 +1,6 @@
 import { RunTaskOptions, runTask } from '../../lib/task/run';
 import { Config } from '../../lib/model/config';
-import { Project } from '../../lib/model/project';
+import { Package } from '../../lib/model/package';
 import { runCommand } from '../../lib/cmd-util/cmd-util';
 
 jest.mock('../../lib/cmd-util/cmd-util');
@@ -15,11 +15,11 @@ describe('Run task', () => {
         expect.assertions(3);
 
         const options: RunTaskOptions = {
-            taskNames: ['build']
+            scriptNames: ['build']
         };
         const projects = [
-            createProject('p1', { build: '$test && echo p1', test: 'jest --config ./config.js' }),
-            createProject('p2', { build: 'echo p2' })
+            createPackage('p1', { build: '$test && echo p1', test: 'jest --config ./config.js' }),
+            createPackage('p2', { build: 'echo p2' })
         ];
 
         return runTask(options, projects).then((res) => {
@@ -33,11 +33,11 @@ describe('Run task', () => {
         expect.assertions(3);
 
         const options: RunTaskOptions = {
-            taskNames: ['build']
+            scriptNames: ['build']
         };
         const projects = [
-            createProject('p1', { test: 'echo p1' }),
-            createProject('p2', { build: 'echo p2' })
+            createPackage('p1', { test: 'echo p1' }),
+            createPackage('p2', { build: 'echo p2' })
         ];
 
         return runTask(options, projects).then((res) => {
@@ -51,12 +51,12 @@ describe('Run task', () => {
         expect.assertions(3);
 
         const options: RunTaskOptions = {
-            taskNames: ['build'],
+            scriptNames: ['build'],
             parallel: true
         };
         const projects = [
-            createProject('p1', { build: 'echo p1' }),
-            createProject('p2', { build: 'echo p2' })
+            createPackage('p1', { build: 'echo p1' }),
+            createPackage('p2', { build: 'echo p2' })
         ];
 
         return runTask(options, projects).then((res) => {
@@ -70,14 +70,14 @@ describe('Run task', () => {
         expect.assertions(2);
 
         const options: RunTaskOptions = {
-            taskNames: ['build'],
+            scriptNames: ['build'],
             parallel: true,
-            maxParallelTasks: 2
+            maxParallelScripts: 2
         };
         const projects = [
-            createProject('p1', { build: 'echo p1' }),
-            createProject('p2', { build: 'echo p2' }),
-            createProject('p3', { build: 'echo p3' }),
+            createPackage('p1', { build: 'echo p1' }),
+            createPackage('p2', { build: 'echo p2' }),
+            createPackage('p3', { build: 'echo p3' }),
         ];
 
         return runTask(options, projects).then((res) => {
@@ -90,12 +90,12 @@ describe('Run task', () => {
         expect.assertions(1);
 
         const options: RunTaskOptions = {
-            taskNames: ['build']
+            scriptNames: ['build']
         };
         const projects = [];
 
         return runTask(options, projects).catch((err) => {
-            expect(err).toEqual('Runnable commands for task "build" was not found');
+            expect(err).toEqual('Runnable commands for script "build" was not found');
         });
     });
 
@@ -107,12 +107,12 @@ describe('Run task', () => {
         });
 
         const options: RunTaskOptions = {
-            taskNames: ['build'],
+            scriptNames: ['build'],
             stopOnFail: true
         };
         const projects = [
-            createProject('p1', { build: 'fail echo p1' }),
-            createProject('p2', { build: 'echo p2' })
+            createPackage('p1', { build: 'fail echo p1' }),
+            createPackage('p2', { build: 'echo p2' })
         ];
 
         return runTask(options, projects).catch((err) => {
@@ -122,6 +122,6 @@ describe('Run task', () => {
     });
 });
 
-function createProject(name, tasks: { [index: string]: string }) {
-    return new Project({ name: name, path: `/app/${name}`, tasks: tasks });
+function createPackage(name, scripts: { [index: string]: string }) {
+    return new Package({ name: name, path: `/app/${name}`, scripts: scripts });
 }

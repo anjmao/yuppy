@@ -1,22 +1,22 @@
-import { Project } from '../model/project';
+import { Package } from '../model/package';
 import { runCommand } from '../cmd-util/cmd-util';
 import { SUCCESS_CODE } from '../model/constant';
 
 export interface RunTaskOptions {
-    taskNames: string[];
+    scriptNames: string[];
     parallel?: boolean;
-    maxParallelTasks?: number;
+    maxParallelScripts?: number;
     stopOnFail?: boolean;
     skipUnchanged?: boolean; // TODO
 }
 
 type TaskFn = () => Promise<any>;
 
-export async function runTask(opt: RunTaskOptions, projects: Project[]): Promise<number> {
+export async function runTask(opt: RunTaskOptions, projects: Package[]): Promise<number> {
 
     const runInParallel = async (tasksFn: TaskFn[]) => {
-        if (opt.maxParallelTasks) {
-            const buckets = createTasksBuckets(tasksFn, opt.maxParallelTasks);
+        if (opt.maxParallelScripts) {
+            const buckets = createTasksBuckets(tasksFn, opt.maxParallelScripts);
             let success = true;
             for (const bucket of buckets) {
                 try {
@@ -57,7 +57,7 @@ export async function runTask(opt: RunTaskOptions, projects: Project[]): Promise
             }
         }
         if (tasksFn.length === 0) {
-            return Promise.reject(`Runnable commands for task "${taskName}" was not found`);
+            return Promise.reject(`Runnable commands for script "${taskName}" was not found`);
         }
 
         if (opt.parallel) {
@@ -67,7 +67,7 @@ export async function runTask(opt: RunTaskOptions, projects: Project[]): Promise
         }
     };
 
-    for (let taskName of opt.taskNames) {
+    for (let taskName of opt.scriptNames) {
         try {
             await runTask(taskName);
         } catch (err) {

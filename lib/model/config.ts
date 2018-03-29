@@ -1,25 +1,25 @@
-import { Project } from './project';
+import { Package } from './package';
 
 export interface ConfigSchema {
-    projects: {
+    packages: {
         name: string;
         path: string;
-        tasks: { [index: string]: string };
+        scripts: { [index: string]: string };
     }[];
 }
 
 export class Config {
-    public readonly projects: Project[];
-    constructor(opt: { projects: Project[] }) {
-        this.projects = opt.projects;
+    public readonly packages: Package[];
+    constructor(opt: { packages: Package[] }) {
+        this.packages = opt.packages;
     }
 
     static deserialize(config: ConfigSchema): Config {
-        const projects = config.projects.map((x) => new Project({name: x.name, path: x.path, tasks: x.tasks}));
-        return new Config({projects: projects});
+        const packages = config.packages.map((x) => new Package({name: x.name, path: x.path, scripts: x.scripts}));
+        return new Config({packages: packages});
     }
 
     getProject(name: string) {
-        return this.projects.find(x => x.name === name);
+        return this.packages.find(x => x.name === name);
     }
 }

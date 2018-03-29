@@ -13,7 +13,7 @@ exports.run = function () {
 
     program
         .command('start')
-        .description('Select and run project task')
+        .description('Select and run package script')
         .option("-c, --config [config]", "Optional yuppy config file path")
         .action((args) => {
             const config = getYuppyConfig(args.config);
@@ -28,23 +28,23 @@ exports.run = function () {
         });
 
     program
-        .command('run <task>')
-        .description('Run given task(s) for all project')
+        .command('run <script>')
+        .description('Run given script(s) for all project')
         .option("-c, --config [config]", "Optional yuppy config file path")
-        .option("-s, --stop-on-fail", "Stop on first failed task")
-        .option("-S, --skip-unchanged", "Skip task when project is not changed")
+        .option("-s, --stop-on-fail", "Stop on first failed script")
+        .option("-S, --skip-unchanged", "Skip script when project is not changed")
         .option("-p, --parallel", "Run in parallel")
-        .option("-P, --max-parallel-tasks [maxParallelTasks]", "Set max parallel tasks to run at the same time")
-        .action((task, args) => {
+        .option("-P, --max-parallel-scripts [maxParallelScripts]", "Set max parallel scripts to run at the same time")
+        .action((script, args) => {
             const config = getYuppyConfig(args.config);
             const runOptions: RunTaskOptions = {
-                taskNames: task.split(','),
+                scriptNames: script.split(','),
                 parallel: args.parallel,
-                maxParallelTasks: parseInt(args.maxParallelTasks) ? args.maxParallelTasks : 0,
+                maxParallelScripts: parseInt(args.maxParallelScripts) ? args.maxParallelScripts : 0,
                 stopOnFail: args.stopOnFail,
                 skipUnchanged: false
             };
-            runTask(runOptions, config.projects).then((code) => {
+            runTask(runOptions, config.packages).then((code) => {
                 process.stdin.pause();
                 process.exit(code);
             }).catch((err) => {
@@ -64,15 +64,12 @@ exports.run = function () {
 function getYuppyConfig(configPath: string): Config {
     configPath = configPath || DEFAULT_CONFIG_NAME;
     const isJs = configPath.split('.').pop() === 'js';
-    try {
-        let config: ConfigSchema = null;
-        if (isJs) {
-            config = require(path.resolve(process.cwd(), configPath));
-        } else {
-            config = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), configPath), 'utf8'));
-        }
-        return Config.deserialize(config);
-    } catch (err) {
-        throw new Error(`Can not open config file in path "${configPath}": ${err}`);
+    const fullPath = path.resolve(process.cwd(), configPath);
+    let config: ConfigSchema = null;
+    if (isJs) {
+        config = require(fullPath);
+    } else {
+        config = JSON.parse(fs.readFileSync(fullPath, 'utf8'));
     }
+    return Config.deserialize(config);
 }

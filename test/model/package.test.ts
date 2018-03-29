@@ -1,11 +1,11 @@
-import { Project } from '../../lib/model/project';
+import { Package } from '../../lib/model/package';
 
-describe('Project model', () => {
+describe('Package model', () => {
     it('should get cmd by name and inline tasks', () => {
-        const project = new Project({
+        const pkg = new Package({
             name: 'p1',
             path: './',
-            tasks: {
+            scripts: {
                 build: 'webpack --config ./webpack.config.js',
                 test: 'jest --config ./test.js',
                 all: '$build && $test',
@@ -13,25 +13,25 @@ describe('Project model', () => {
             }
         });
 
-        let cmd = project.getCmd('all');
+        let cmd = pkg.getCmd('all');
         expect(cmd).toEqual('webpack --config ./webpack.config.js && jest --config ./test.js');
 
-        cmd = project.getCmd('build');
+        cmd = pkg.getCmd('build');
         expect(cmd).toEqual('webpack --config ./webpack.config.js');
 
-        cmd = project.getCmd('echo');
+        cmd = pkg.getCmd('echo');
         expect(cmd).toEqual('hi doggy');
     });
 
     it('should return null when task not found', () => {
-        const project = new Project({
+        const pkg = new Package({
             name: 'p1',
             path: './',
-            tasks: {
+            scripts: {
                 all: 'echo hi doggy'
             }
         });
 
-        expect(project.getCmd('uh')).toEqual(null);
+        expect(pkg.getCmd('uh')).toEqual(null);
     });
 });

@@ -1,6 +1,6 @@
 import { startTask } from '../../lib/task/start';
 import { Config } from '../../lib/model/config';
-import { Project } from '../../lib/model/project';
+import { Package } from '../../lib/model/package';
 import { runCommand } from '../../lib/cmd-util/cmd-util';
 import * as inquirer from 'inquirer';
 import { SUCCESS_CODE, FAILURE_CODE } from '../../lib/model/constant';
@@ -17,13 +17,13 @@ describe('Start task', () => {
         expect.assertions(2);
 
         (<jest.Mock>inquirer.prompt)
-            .mockReturnValueOnce(Promise.resolve({ project: 'p1' }))
-            .mockReturnValueOnce(Promise.resolve({ task: 'build' }));
+            .mockReturnValueOnce(Promise.resolve({ package: 'p1' }))
+            .mockReturnValueOnce(Promise.resolve({ script: 'build' }));
         
         (<jest.Mock>runCommand).mockImplementation(() => Promise.resolve(SUCCESS_CODE));
 
         const config = createConfig([
-            createProject('p1', { build: 'echo p1' })
+            createPackage('p1', { build: 'echo p1' })
         ]);
 
         return startTask(config).then((res) => {
@@ -36,13 +36,13 @@ describe('Start task', () => {
         expect.assertions(1);
 
         (<jest.Mock>inquirer.prompt)
-            .mockReturnValueOnce(Promise.resolve({ project: 'p1' }))
-            .mockReturnValueOnce(Promise.resolve({ task: 'build' }));
+            .mockReturnValueOnce(Promise.resolve({ package: 'p1' }))
+            .mockReturnValueOnce(Promise.resolve({ script: 'build' }));
         
         (<jest.Mock>runCommand).mockImplementation(() => Promise.reject(FAILURE_CODE));
 
         const config = createConfig([
-            createProject('p1', { build: 'echo p1' })
+            createPackage('p1', { build: 'echo p1' })
         ]);
 
         return startTask(config).catch((res) => {
@@ -51,10 +51,10 @@ describe('Start task', () => {
     });
 });
 
-function createConfig(projects: Project[]) {
-    return new Config({ projects });
+function createConfig(packages: Package[]) {
+    return new Config({ packages });
 }
 
-function createProject(name, tasks: { [index: string]: string }) {
-    return new Project({ name: name, path: `/app/${name}`, tasks: tasks });
+function createPackage(name, scripts: { [index: string]: string }) {
+    return new Package({ name: name, path: `/app/${name}`, scripts: scripts });
 }
