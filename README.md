@@ -4,12 +4,15 @@ Monorepo packages development-production cli
 ## What is Yuppy
 Yuppy allows you do describe multiple packages in config file and run command for each of them.
 
+![yuppy](https://github.com/anjmao/yuppy/blob/master/yuppy.gif)
+
+
 ### Features
 - [x] Show packages and run selected command in interactive command line
 - [x] Run single or multiple packages commands
-- [] Detect and skip command if package path is not changed during CI
-- [] Jenkins integration
-- [] Gitlab integration
+- [ ] Detect and skip command if package path is not changed during CI
+- [ ] Jenkins integration
+- [ ] Gitlab integration
 
 ## Getting started
 
