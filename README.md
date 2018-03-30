@@ -1,3 +1,10 @@
+[![npm version](https://badge.fury.io/js/yuppy.svg)](https://badge.fury.io/js/yuppy)
+[![Build Status][travis-badge]][travis-badge-url]
+
+[travis-badge]: https://travis-ci.org/anjmao/yuppy.svg?branch=master
+[travis-badge-url]: https://travis-ci.org/anjmao/yuppy
+[ng-select-url]: https://unpkg.com/yuppy@latest
+
 # Yuppy
 Monorepo packages development-production cli
 
