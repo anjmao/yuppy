@@ -1,66 +1,123 @@
 # Yuppy
-Projects development management made simple.
+Monorepo packages development-production cli
 
 ## What is Yuppy
-Yuppy allows you do describe your projects and their commands for easy to use development workflows.
+Yuppy allows you do describe multiple packages in config file and run command for each of them.
+
+### Features
+- [x] Show packages and run selected command in interactive command line
+- [x] Run single or multiple packages commands
+- [] Detect and skip command if package path is not changed during CI
+- [] Jenkins integration
+- [] Gitlab integration
 
 ## Getting started
 
 * Install yuppy
+
+using npm
 ```
-npm install yuppy -g
+npm install yuppy --save-dev
+```
+using Yarn
+```
+yarn add yuppy --dev
 ```
 
-* Create `yuppy.config.json` file under your projects root
+* Create `yuppy.config.js` (or yuppy.config.json) file under your root
 
-```json
-{
-    "projects": [
+```js
+const node = 'node';
+const webpack = `${node} ./node_modules/webpack-cli/bin/webpack.js`
+module.exports = {
+    'packages': [
         {
-            "name": "Angular app",
-            "commands": {
-                "start": "webpack --watch --config ./webpack/angular.webpack.js",
-                "test": "karma start"
+            'name': 'Angular app',
+            'scripts': {
+                'start': `${webpack} --watch --config ./config/angular.webpack.js`,
+                'build': `${webpack} --config ./config/angular.webpack.js`,
+                'echo': 'echo Hello Angular',
+                'err': 'Angular error please'
             }
         },
         {
-            "name": "Vue app",
-            "commands": {
-                "start": "webpack --watch --config ./webpack/vue.webpack.js",
-                "test": "mocha"
+            'name': 'Vue app',
+            'scripts': {
+                'start': `${webpack} --watch --config ./config/vue.webpack.js`,
+                'build': `${webpack} --config ./config/vue.webpack.js`,
+                'echo': 'echo Hello Vue',
+                'err': 'Vue error please'
             }
         },
         {
-            "name": "React app",
-            "commands": {
-                "start": "webpack --watch --config ./webpack/react.webpack.js",
-                "test": "jest"
-            }
-        },
-        {
-            "name": "Dotnet Core API",
-            "commands": {
-                "start": "dotnet run --project ./backend/api.csproj",
-                "test": "dotnet test ./backend/api.tests.csproj"
+            'name': 'React app',
+            'scripts': {
+                'start': `${webpack} --watch --config ./config/react.webpack.js`,
+                'build': `${webpack} --config ./config/react.webpack.js`,
+                'echo': 'echo Hello React',
+                'err': 'React error please'
             }
         }
     ]
 }
 ```
 
-* Run yuppy cli
+* Update pacakge.json scripts and add start command
+
+```json
+"scripts": {
+    "start": "./node_modules/yuppy/bin/yuppy start"
+},
+```
+
+## Api
+
+* Run `yuppy -h` to see available commands
 
 ```
-yuppy start
+Usage: yuppy [options] [command]
+
+  Options:
+
+    -V, --version  output the version number
+    -h, --help     output usage information
+
+  Commands:
+
+    start [options]         Select and run package script
+    run [options] <script>  Run given script(s) for all project
 ```
 
-* Select project
+* Run `yuppy start -h` to see start command options
 
-![](https://github.com/anjmao/yuppy/blob/master/select_project.png)
+```
+Usage: start [options]
 
-* Run command
+  Select and run package script
 
-![](https://github.com/anjmao/yuppy/blob/master/run_command.png)
+  Options:
+
+    -c, --config [config]  Optional yuppy config file path
+    -h, --help             output usage information
+```
+
+* Run `yuppy run -h` to see run command options
+
+```
+Usage: run [options] <script>
+
+  Run given script(s) for all project
+
+
+  Options:
+
+    -c, --config [config]                            Optional yuppy config file path
+    -s, --stop-on-fail                               Stop on first failed script
+    -S, --skip-unchanged                             Skip script when project is not changed
+    -p, --parallel                                   Run in parallel
+    -P, --max-parallel-scripts [maxParallelScripts]  Set max parallel scripts to run at the same time
+    -h, --help  
+```
 
 ## Built With
 

@@ -7,7 +7,9 @@
     "yuppy": "./bin/yuppy"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "./build.sh",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,13 @@
     "inquirer": "^5.0.0"
   },
   "devDependencies": {
+    "@types/commander": "^2.12.2",
+    "@types/inquirer": "^0.0.38",
+    "@types/jest": "^22.2.2",
+    "@types/node": "^9.6.0",
+    "jest": "^22.4.3",
+    "standard-version": "^4.3.0",
+    "ts-jest": "^22.4.2",
     "typescript": "^2.6.2"
   }
 }
