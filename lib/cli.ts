@@ -9,7 +9,7 @@ import { FAILURE_CODE } from './model/constant';
 const DEFAULT_CONFIG_NAME = 'yuppy.config.js';
 
 exports.run = function () {
-    program.version('0.0.1');
+    program.version('<VERSION>');
 
     program
         .command('start')

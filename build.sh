@@ -11,3 +11,6 @@ cp package.json ./dist
 
 # copy bin to dist
 cp -R bin ./dist
+
+# copy readme
+cp README.md ./dist
