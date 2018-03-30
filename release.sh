@@ -2,7 +2,7 @@
 git pull
 
 # uddate changelog
-node ./node_modules/standard-version/bin/cli.js --infile ../CHANGELOG.md
+node ./node_modules/standard-version/bin/cli.js --infile ./CHANGELOG.md
 
 # build lib to dist
 TAG=$(git describe --abbrev=0 --tags)
