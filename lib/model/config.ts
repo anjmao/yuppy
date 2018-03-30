@@ -15,6 +15,17 @@ export class Config {
     }
 
     static deserialize(config: ConfigSchema): Config {
+        if (!config.packages) {
+            throw new Error(`Invalid configuration: packages must be defined`);
+        }
+        if (!Array.isArray(config.packages)) {
+            throw new Error(`Invalid configuration: packages must be an array`);
+        }
+        for (const pkg of config.packages) {
+            if (!pkg.name) {
+                throw new Error(`Invalid configuration: package name should be defined`);
+            }
+        }
         const packages = config.packages.map((x) => new Package({name: x.name, path: x.path, scripts: x.scripts}));
         return new Config({packages: packages});
     }
