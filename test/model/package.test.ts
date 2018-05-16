@@ -4,7 +4,7 @@ describe('Package model', () => {
     it('should get cmd by name and inline tasks', () => {
         const pkg = new Package({
             name: 'p1',
-            path: './',
+            paths: ['./'],
             scripts: {
                 build: 'webpack --config ./webpack.config.js',
                 test: 'jest --config ./test.js',
@@ -26,7 +26,7 @@ describe('Package model', () => {
     it('should return null when task not found', () => {
         const pkg = new Package({
             name: 'p1',
-            path: './',
+            paths: ['./'],
             scripts: {
                 all: 'echo hi doggy'
             }

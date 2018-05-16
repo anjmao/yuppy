@@ -44,7 +44,7 @@ exports.run = function () {
                 stopOnFail: args.stopOnFail,
                 skipUnchanged: false
             };
-            runTask(runOptions, config.packages).then((code) => {
+            runTask(runOptions, config).then((code) => {
                 process.stdin.pause();
                 process.exit(code);
             }).catch((err) => {

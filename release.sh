@@ -1,7 +1,7 @@
 #!/bin/bash
 git pull
 
-# uddate changelog
+# update changelog
 node ./node_modules/standard-version/bin/cli.js --infile ./CHANGELOG.md
 
 # build lib to dist

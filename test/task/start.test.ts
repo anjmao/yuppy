@@ -1,11 +1,11 @@
 import { startTask } from '../../lib/task/start';
 import { Config } from '../../lib/model/config';
 import { Package } from '../../lib/model/package';
-import { runCommand } from '../../lib/cmd-util/cmd-util';
+import { runCommand } from '../../lib/util/cmd-util';
 import * as inquirer from 'inquirer';
 import { SUCCESS_CODE, FAILURE_CODE } from '../../lib/model/constant';
 
-jest.mock('../../lib/cmd-util/cmd-util');
+jest.mock('../../lib/util/cmd-util');
 jest.mock('inquirer');
 
 describe('Start task', () => {
@@ -56,5 +56,5 @@ function createConfig(packages: Package[]) {
 }
 
 function createPackage(name, scripts: { [index: string]: string }) {
-    return new Package({ name: name, path: `/app/${name}`, scripts: scripts });
+    return new Package({ name: name, paths: [`/app/${name}`], scripts: scripts });
 }

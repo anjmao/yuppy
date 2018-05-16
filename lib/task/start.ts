@@ -1,5 +1,5 @@
 import * as inquirer from 'inquirer';
-import { runCommand } from '../cmd-util/cmd-util';
+import { runCommand } from '../util/cmd-util';
 import { Config } from '../model/config';
 
 export function startTask(config: Config): Promise<any> {

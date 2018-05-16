@@ -17,9 +17,7 @@ Yuppy allows you do describe multiple packages in config file and run command fo
 ### Features
 - [x] Show packages and run selected command in interactive command line
 - [x] Run single or multiple packages commands
-- [ ] Detect and skip command if package path is not changed during CI
-- [ ] Jenkins integration
-- [ ] Gitlab integration
+- [x] Detect and skip command if package path is not changed during CI (uses git diff)
 
 ## Getting started
 

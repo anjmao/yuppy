@@ -1,11 +1,24 @@
+
+export interface PackageCtrArgs {
+    name: string;
+    paths?: string[];
+    forceCommitMessage?: string;
+    baseDevBranch?: string;
+    scripts: { [index: string]: string };
+}
+
 export class Package {
     public readonly name: string;
-    public readonly path: string;
+    public readonly baseDevBranch: string;
+    public readonly paths: string[];
+    public readonly forceCommitMessage?: string;
     public readonly scripts: { [index: string]: string };
 
-    constructor(opt: {name: string, path: string, scripts: { [index: string]: string }}) {
+    constructor(opt: PackageCtrArgs) {
         this.name = opt.name;
-        this.path = opt.path;
+        this.paths = opt.paths;
+        this.baseDevBranch = opt.baseDevBranch || 'master';
+        this.forceCommitMessage = opt.forceCommitMessage; 
         this.scripts = opt.scripts;
     }
 

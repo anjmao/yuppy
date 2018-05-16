@@ -4,8 +4,8 @@ describe('Config model', () => {
     it('should create from config json object', () => {
         const json: ConfigSchema = {
             packages: [
-                { name: 'p1', path: './p1', scripts: { build: 'go build main.go' } },
-                { name: 'p2', path: './p2', scripts: { test: 'go test ./...' } }
+                { name: 'p1', paths: ['./p1'], baseDevBranch: 'dev', scripts: { build: 'go build main.go' } },
+                { name: 'p2', paths: ['./p2'], scripts: { test: 'go test ./...' } }
             ]
         };
 
@@ -13,8 +13,8 @@ describe('Config model', () => {
 
         expect(config).toEqual({
             packages: [
-                { name: 'p1', path: './p1', scripts: { build: 'go build main.go' } },
-                { name: 'p2', path: './p2', scripts: { test: 'go test ./...' } }
+                { name: 'p1', paths: ['./p1'], baseDevBranch: 'dev', scripts: { build: 'go build main.go' } },
+                { name: 'p2', paths: ['./p2'], baseDevBranch: 'master', scripts: { test: 'go test ./...' } }
             ]
         })
     });
