@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/anjmao/yuppy/compare/v0.2.0...v0.3.0) (2018-05-16)
+
+
+### Features
+
+* git diff checker ([#2](https://github.com/anjmao/yuppy/issues/2)) ([48abf8b](https://github.com/anjmao/yuppy/commit/48abf8b))
+
+
+
 <a name="0.2.0"></a>
 # [0.2.0](https://github.com/anjmao/yuppy/compare/0.0.6...0.2.0) (2018-03-30)
 
