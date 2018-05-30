@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.4.1"></a>
+## [0.4.1](https://github.com/anjmao/yuppy/compare/v0.4.0...v0.4.1) (2018-05-30)
+
+
+### Bug Fixes
+
+* add missing skip unchanged option ([96d729f](https://github.com/anjmao/yuppy/commit/96d729f))
+
+
+
 <a name="0.4.0"></a>
 # [0.4.0](https://github.com/anjmao/yuppy/compare/v0.3.0...v0.4.0) (2018-05-30)
 
