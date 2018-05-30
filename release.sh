@@ -13,6 +13,5 @@ sed -i "" "s|<VERSION>|${TAG}|" ./lib/cli.ts
 git push --follow-tags origin master
 
 # push to npm
-read -p "Press enter to release to npm" npm
 cd ./dist
 yarn publish --access=public
