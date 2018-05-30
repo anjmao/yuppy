@@ -42,8 +42,9 @@ exports.run = function () {
                 parallel: args.parallel,
                 maxParallelScripts: parseInt(args.maxParallelScripts, 10) ? args.maxParallelScripts : 0,
                 stopOnFail: args.stopOnFail,
-                skipUnchanged: false
+                skipUnchanged: args.skipUnchanged
             };
+            console.log(runOptions)
             runTask(runOptions, config).then((code) => {
                 process.stdin.pause();
                 process.exit(code);
