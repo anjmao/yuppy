@@ -5,6 +5,7 @@ import { startTask } from './task/start';
 import { RunTaskOptions, runTask } from './task/run';
 import { Config, ConfigSchema } from './model/config';
 import { FAILURE_CODE } from './model/constant';
+import { enableTrance } from './trace';
 
 const DEFAULT_CONFIG_NAME = 'yuppy.config.js';
 
@@ -15,7 +16,11 @@ exports.run = function () {
         .command('start')
         .description('Select and run package script')
         .option('-c, --config [config]', 'Optional yuppy config file path')
+        .option('-t --trace', 'Ouput tracing messages')
         .action((args) => {
+            if (args.trace) {
+                enableTrance()
+            }
             const config = getYuppyConfig(args.config);
             startTask(config).then((code) => {
                 process.stdin.pause();
@@ -31,20 +36,23 @@ exports.run = function () {
         .command('run <script>')
         .description('Run given script(s) for all project')
         .option('-c, --config [config]', 'Optional yuppy config file path')
-        .option('-s, --stop-on-fail', 'Stop on first failed script')
-        .option('-S, --skip-unchanged', 'Skip script when project is not changed')
-        .option('-p, --parallel', 'Run in parallel')
+        .option('-s, --stop-on-fail', 'Stop on first failed script (default true)')
+        .option('-S, --skip-unchanged', 'Skip script when project is not changed (default false)')
+        .option('-p, --parallel', 'Run in parallel (default false)')
         .option('-P, --max-parallel-scripts [maxParallelScripts]', 'Set max parallel scripts to run at the same time')
+        .option('-t --trace', 'Ouput tracing messages')
         .action((script, args) => {
+            if (args.trace) {
+                enableTrance()
+            }
             const config = getYuppyConfig(args.config);
             const runOptions: RunTaskOptions = {
                 scriptNames: script.split(','),
-                parallel: args.parallel,
+                parallel: args.parallel || false,
                 maxParallelScripts: parseInt(args.maxParallelScripts, 10) ? args.maxParallelScripts : 0,
-                stopOnFail: args.stopOnFail,
-                skipUnchanged: args.skipUnchanged
+                stopOnFail: args.stopOnFail || true,
+                skipUnchanged: args.skipUnchanged || false
             };
-            console.log(runOptions)
             runTask(runOptions, config).then((code) => {
                 process.stdin.pause();
                 process.exit(code);

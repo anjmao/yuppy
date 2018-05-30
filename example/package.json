@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "./node_modules/yuppy/bin/yuppy start",
-    "build": "./node_modules/yuppy/bin/yuppy run build --skip-unchanged",
+    "build": "./node_modules/yuppy/bin/yuppy run build --skip-unchanged --trace",
     "task": "./node_modules/yuppy/bin/yuppy run"
   },
   "author": "",

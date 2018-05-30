@@ -3,6 +3,7 @@ import { runCommand } from '../util/cmd-util';
 import { SUCCESS_CODE } from '../model/constant';
 import  * as git from '../util/git-util';
 import { Config } from '../model/config';
+import { info } from '../trace';
 
 export interface RunTaskOptions {
     scriptNames: string[];
@@ -15,12 +16,14 @@ export interface RunTaskOptions {
 type TaskFn = () => Promise<any>;
 
 export async function runTask(opt: RunTaskOptions, config: Config): Promise<number> {
+    info('run options', opt)
     let packages = config.packages;
     if (opt.skipUnchanged) {
         if (!git.gitExists()) {
             return Promise.reject('Git is required when using skipUnchanged');
         }
         packages = filterChangedPackages(packages, config.forceCommitMessage, config.globalPaths);
+        info('changed packages', packages.map(x => x.name));
     }
 
     const run = async (taskName: string) => {
