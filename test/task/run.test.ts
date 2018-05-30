@@ -91,74 +91,6 @@ describe('Run task', () => {
         });
     });
 
-    it('should run only changed paths scripts', () => {
-        expect.assertions(3);
-
-        (<jest.Mock>gitExists).mockReturnValue(true);
-        (<jest.Mock>gitDiff).mockReturnValue([
-            '/app/p1/main.ts',
-            '/app/p1/style.css'
-        ]);
-
-        const options: RunTaskOptions = {
-            scriptNames: ['build'],
-            skipUnchanged: true
-        };
-        const packages = [
-            createPackage('p1', { build: 'echo p1' }),
-            createPackage('p2', { build: 'echo p2' })
-        ];
-
-        return runTask(options, createConfig(packages)).then((res) => {
-            expect(res).toBe(0);
-            expect(gitDiff).toHaveBeenCalledTimes(1);
-            expect(runCommand).toHaveBeenCalledTimes(1)
-        });
-    });
-
-    it('should not run scripts when paths are not changed', () => {
-        expect.assertions(2);
-
-        (<jest.Mock>gitExists).mockReturnValue(true);
-        (<jest.Mock>gitDiff).mockReturnValue([]);
-
-        const options: RunTaskOptions = {
-            scriptNames: ['build'],
-            skipUnchanged: true
-        };
-        const packages = [
-            createPackage('p1', { build: 'echo p1' }),
-            createPackage('p2', { build: 'echo p2' })
-        ];
-
-        return runTask(options, createConfig(packages)).then((res) => {
-            expect(res).toBe(0);
-            expect(runCommand).toHaveBeenCalledTimes(0);
-        });
-    });
-
-    it('should run scripts when paths are not changed and last commit message contains force commit message', () => {
-        expect.assertions(2);
-
-        (<jest.Mock>gitExists).mockReturnValue(true);
-        (<jest.Mock>gitDiff).mockReturnValue([]);
-        (<jest.Mock>getLastCommitMessage).mockReturnValue('this commit message contains RB comment');
-
-        const options: RunTaskOptions = {
-            scriptNames: ['build'],
-            skipUnchanged: true
-        };
-        const packages = [
-            createPackage('p1', { build: 'echo p1' }),
-            createPackage('p2', { build: 'echo p2' })
-        ];
-        const config = createConfig(packages, 'RB');
-        return runTask(options, config).then((res) => {
-            expect(res).toBe(0);
-            expect(runCommand).toHaveBeenCalledTimes(2);
-        });
-    });
-
     it('should fail when no packages', () => {
         expect.assertions(1);
 
@@ -193,12 +125,121 @@ describe('Run task', () => {
             expect(err).toEqual(new Error('ups'));
         });
     });
+
+    describe('diff cheking', () => {
+
+        it('should run only changed project paths scripts', () => {
+            expect.assertions(3);
+
+            (<jest.Mock>gitExists).mockReturnValue(true);
+            (<jest.Mock>gitDiff).mockReturnValue([
+                '/app/p1/main.ts',
+                '/app/p1/style.css'
+            ]);
+
+            const options: RunTaskOptions = {
+                scriptNames: ['build'],
+                skipUnchanged: true
+            };
+            const packages = [
+                createPackage('p1', { build: 'echo p1' }),
+                createPackage('p2', { build: 'echo p2' })
+            ];
+
+            return runTask(options, createConfig(packages)).then((res) => {
+                expect(res).toBe(0);
+                expect(gitDiff).toHaveBeenCalledTimes(1);
+                expect(runCommand).toHaveBeenCalledTimes(1)
+            });
+        });
+        
+
+        it('should not run scripts when project paths are not changed', () => {
+            expect.assertions(2);
+
+            (<jest.Mock>gitExists).mockReturnValue(true);
+            (<jest.Mock>gitDiff).mockReturnValue([]);
+
+            const options: RunTaskOptions = {
+                scriptNames: ['build'],
+                skipUnchanged: true
+            };
+            const packages = [
+                createPackage('p1', { build: 'echo p1' }),
+                createPackage('p2', { build: 'echo p2' })
+            ];
+
+            return runTask(options, createConfig(packages)).then((res) => {
+                expect(res).toBe(0);
+                expect(runCommand).toHaveBeenCalledTimes(0);
+            });
+        });
+
+        it('should run all scripts when global paths are changed', () => {
+            expect.assertions(2);
+
+            (<jest.Mock>gitExists).mockReturnValue(true);
+            (<jest.Mock>gitDiff).mockReturnValue([
+                '/user/global/webpack.js',
+                '/user/global/jest.config.js'
+            ]);
+
+            const options: RunTaskOptions = {
+                scriptNames: ['build'],
+                skipUnchanged: true
+            };
+            const packages = [
+                createPackage('p1', { build: 'echo p1' }),
+                createPackage('p2', { build: 'echo p2' })
+            ];
+            const globalPaths = [
+                'global/'
+            ];
+
+            return runTask(options, createConfig(packages, null, globalPaths)).then((res) => {
+                expect(res).toBe(0);
+                expect(runCommand).toHaveBeenCalledTimes(2)
+            });
+        });
+
+        it('should run scripts when project paths are not changed and last commit message contains force commit message', () => {
+            expect.assertions(2);
+
+            (<jest.Mock>gitExists).mockReturnValue(true);
+            (<jest.Mock>gitDiff).mockReturnValue([]);
+            (<jest.Mock>getLastCommitMessage).mockReturnValue('this commit message contains RB comment');
+
+            const options: RunTaskOptions = {
+                scriptNames: ['build'],
+                skipUnchanged: true
+            };
+            const packages = [
+                createPackage('p1', { build: 'echo p1' }),
+                createPackage('p2', { build: 'echo p2' })
+            ];
+            const config = createConfig(packages, 'RB');
+            return runTask(options, config).then((res) => {
+                expect(res).toBe(0);
+                expect(runCommand).toHaveBeenCalledTimes(2);
+            });
+        });
+
+    });
 });
 
-function createConfig(packages: Package[], forceCommitMessage?: string) {
-    return new Config({ packages: packages, forceCommitMessage: forceCommitMessage });
+function createConfig(packages: Package[] = [], forceCommitMessage?: string, globalPaths: string[] = []) {
+    return new Config({
+        packages,
+        forceCommitMessage,
+        globalPaths
+    });
 }
 
 function createPackage(name, scripts: { [index: string]: string }) {
-    return new Package({ name: name, paths: [`/app/${name}`], baseDevBranch: 'dev', scripts: scripts });
+    return new Package({ 
+        name: name,
+        paths: [`/app/${name}`],
+        baseDevBranch: 'dev',
+        scripts: scripts
+    });
 }

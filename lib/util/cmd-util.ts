@@ -19,7 +19,7 @@ export function runCommand(cmd: string) {
 }
 
 function spawnCommand(command: string, options: any) {
-    var file, args;
+    let file, args;
     if (process.platform === 'win32') {
         file = 'cmd.exe';
         args = ['/s', '/c', '"' + command + '"'];

@@ -9,12 +9,12 @@ import { FAILURE_CODE } from './model/constant';
 const DEFAULT_CONFIG_NAME = 'yuppy.config.js';
 
 exports.run = function () {
-    program.version('<VERSION>');
+    program.version('v0.3.0');
 
     program
         .command('start')
         .description('Select and run package script')
-        .option("-c, --config [config]", "Optional yuppy config file path")
+        .option('-c, --config [config]', 'Optional yuppy config file path')
         .action((args) => {
             const config = getYuppyConfig(args.config);
             startTask(config).then((code) => {
@@ -30,17 +30,17 @@ exports.run = function () {
     program
         .command('run <script>')
         .description('Run given script(s) for all project')
-        .option("-c, --config [config]", "Optional yuppy config file path")
-        .option("-s, --stop-on-fail", "Stop on first failed script")
-        .option("-S, --skip-unchanged", "Skip script when project is not changed")
-        .option("-p, --parallel", "Run in parallel")
-        .option("-P, --max-parallel-scripts [maxParallelScripts]", "Set max parallel scripts to run at the same time")
+        .option('-c, --config [config]', 'Optional yuppy config file path')
+        .option('-s, --stop-on-fail', 'Stop on first failed script')
+        .option('-S, --skip-unchanged', 'Skip script when project is not changed')
+        .option('-p, --parallel', 'Run in parallel')
+        .option('-P, --max-parallel-scripts [maxParallelScripts]', 'Set max parallel scripts to run at the same time')
         .action((script, args) => {
             const config = getYuppyConfig(args.config);
             const runOptions: RunTaskOptions = {
                 scriptNames: script.split(','),
                 parallel: args.parallel,
-                maxParallelScripts: parseInt(args.maxParallelScripts) ? args.maxParallelScripts : 0,
+                maxParallelScripts: parseInt(args.maxParallelScripts, 10) ? args.maxParallelScripts : 0,
                 stopOnFail: args.stopOnFail,
                 skipUnchanged: false
             };
@@ -65,11 +65,11 @@ function getYuppyConfig(configPath: string): Config {
     configPath = configPath || DEFAULT_CONFIG_NAME;
     const isJs = configPath.split('.').pop() === 'js';
     const fullPath = path.resolve(process.cwd(), configPath);
-    let config: ConfigSchema = null;
+    let config: ConfigSchema | null = null;
     if (isJs) {
         config = require(fullPath);
     } else {
         config = JSON.parse(fs.readFileSync(fullPath, 'utf8'));
     }
-    return Config.deserialize(config);
+    return new Config(<ConfigSchema>config);
 }

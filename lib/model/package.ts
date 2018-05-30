@@ -10,13 +10,13 @@ export interface PackageCtrArgs {
 export class Package {
     public readonly name: string;
     public readonly baseDevBranch: string;
-    public readonly paths: string[];
+    public readonly paths: string[] = [];
     public readonly forceCommitMessage?: string;
     public readonly scripts: { [index: string]: string };
 
     constructor(opt: PackageCtrArgs) {
         this.name = opt.name;
-        this.paths = opt.paths;
+        this.paths = opt.paths || [];
         this.baseDevBranch = opt.baseDevBranch || 'master';
         this.forceCommitMessage = opt.forceCommitMessage; 
         this.scripts = opt.scripts;
@@ -25,7 +25,7 @@ export class Package {
     getCmd(scriptName: string): string | null {
         const keys = Object.keys(this.scripts);
         const key = keys.find(x => x.indexOf(scriptName) > -1);
-        let cmd = this.scripts[key];
+        let cmd = this.scripts[key || ''];
         if (!cmd) {
            return null;
         }
