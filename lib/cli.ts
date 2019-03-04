@@ -49,7 +49,7 @@ exports.run = function () {
             const runOptions: RunTaskOptions = {
                 scriptNames: script.split(','),
                 parallel: args.parallel || false,
-                maxParallelScripts: parseInt(args.maxParallelScripts, 10) ? args.maxParallelScripts : 0,
+                maxParallelScripts: Number(args.maxParallelScripts) || 10,
                 stopOnFail: args.stopOnFail || true,
                 skipUnchanged: args.skipUnchanged || false
             };
